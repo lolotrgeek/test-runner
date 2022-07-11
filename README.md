@@ -2,12 +2,36 @@
 Run tests from a directory by spawning separate processes for each.
 
 ## Usage
+1. create a directory with the test file(s)
 
+2. Add the following to the test file(s)
+```
+// If the test passed
+console.log("Pass:", true)
+
+// If the test failed
+console.log("Pass:", false)
+
+
+```
+3. Setup `test.js`
 ```
 const {Run} = require('test-runner')
 
-let test_dir = "/path/to/test/files/
+let test_dir = "/path/to/test/dir/
 
 Run(test_dir)
 
 ```
+4. run tests
+```
+node test
+```
+
+## Error Fixes
+```
+process Error: Cannot find module '../your/module'
+```
+This error happens because of absolute path modules, you need to resolve the path.
+
+FIX: In the test file throwing this error update your `require('../path/to/module')` to `require(require.resolve('../path/to/module'))`:
