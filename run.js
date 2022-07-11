@@ -6,8 +6,10 @@ function Run(directoryPath) {
         if (err) console.log(err)
         files.forEach((file, i) => {
             if (file === 'utils') files.splice(i)
-            console.log(directoryPath + file)
-            spawn_node(directoryPath + file, 1)
+            else {
+                console.log(directoryPath + file)
+                spawn_node(directoryPath + file, 1)
+            }
         })
     })
 }
