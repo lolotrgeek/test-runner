@@ -17,10 +17,13 @@ function decode(message) {
 function listener(message, node) {
     try {
         let data = decode(message)
-        if (Array.isArray(data) && data.find(datum => datum === "Pass:")) {
-            console.log(...data)
-            spawner.end_node(node)
-            done++
+        if (Array.isArray(data)) {
+            let isTest = data.findIndex(datum => datum === "Pass:")
+            if (isTest > -1) {
+                console.log(`[${node.name}] Pass:`, data[isTest + 1])
+                spawner.end_node(node)
+                done++
+            }
         }
     } catch (error) {
         console.log(error)
