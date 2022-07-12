@@ -1,30 +1,35 @@
-const { spawn_node } = require("process-spawn")
-const fs = require('fs')
+const { Spawner } = require("process-spawn")
+
+const spawner = new Spawner()
+// spawner.debug = 'status'
+spawner.complete = true
+
+let done = 0
+
+function decode(message) {
+    try {
+        return JSON.parse(message)
+    } catch (error) {
+        return message
+    }
+}
+
+function listener(message, node) {
+    try {
+        let data = decode(message)
+        if (Array.isArray(data) && data.find(datum => datum === "Pass:")) {
+            console.log(...data)
+            spawner.end_node(node)
+            done++
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 function Run(directoryPath) {
-    fs.readdir(directoryPath, (err, files) => {
-        if (err) console.log(err)
-        let done = 0
-        files.forEach((file, i) => {
-            if (file === 'utils') files.splice(i)
-            else {
-                console.log(directoryPath + file)
-                spawn_node(directoryPath + file, 1, message => {
-                    try {
-                        let data = JSON.parse(message)
-                        if (data.find(datum => datum === "Pass:")) {
-                            console.log(...data)
-                            done++
-                        }
-
-                        if (done === files.length) process.exit()
-                    } catch (error) {
-                        console.log(message)
-                    }
-                })
-            }
-        })
-    })
+    let ignore = "utils"
+    spawner.spawn_directory(directoryPath, (message, node) => listener(message, node), ignore)
 }
 
 module.exports = { Run }

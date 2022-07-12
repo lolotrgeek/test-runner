@@ -27,11 +27,3 @@ Run(test_dir)
 ```
 node test
 ```
-
-## Error Fixes
-```
-process Error: Cannot find module '../your/module'
-```
-This error happens because of absolute path modules, you need to resolve the path.
-
-FIX: In the test file throwing this error update your `require('../path/to/module')` to `require(require.resolve('../path/to/module'))`:
